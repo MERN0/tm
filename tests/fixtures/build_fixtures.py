@@ -16,11 +16,18 @@ Run directly to (re)write the fixture files:
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from pathlib import Path
 
 from openpyxl import Workbook
 
 FIXTURES_DIR = Path(__file__).parent
+
+# openpyxl stamps created/modified with datetime.now() by default, which makes
+# every regenerated fixture a spurious binary diff even when the data is
+# identical. Pin both to a fixed value so re-running build_all() (as the test
+# suite does on every run) produces byte-identical files when nothing changed.
+_FIXED_TIMESTAMP = datetime(2026, 1, 1, tzinfo=timezone.utc)
 
 
 def _write_sheet(wb: Workbook, name: str, headers: list[str], rows: list[list]) -> None:
@@ -28,6 +35,12 @@ def _write_sheet(wb: Workbook, name: str, headers: list[str], rows: list[list]) 
     ws.append(headers)
     for row in rows:
         ws.append(row)
+
+
+def _save(wb: Workbook, path: Path) -> None:
+    wb.properties.created = _FIXED_TIMESTAMP
+    wb.properties.modified = _FIXED_TIMESTAMP
+    wb.save(path)
 
 
 def build_system_requirements() -> Path:
@@ -253,7 +266,7 @@ def build_system_requirements() -> Path:
     )
 
     path = FIXTURES_DIR / "System Requirements.xlsx"
-    wb.save(path)
+    _save(wb, path)
     return path
 
 
@@ -389,7 +402,7 @@ def build_command_list() -> Path:
     )
 
     path = FIXTURES_DIR / "TE_TMHC_Command_List.xlsx"
-    wb.save(path)
+    _save(wb, path)
     return path
 
 
@@ -419,7 +432,7 @@ def build_configuration_file() -> Path:
     ws.merge_cells(start_row=2, start_column=2, end_row=3, end_column=2)
 
     path = FIXTURES_DIR / "TE_TMHC_Configuration_File.xlsx"
-    wb.save(path)
+    _save(wb, path)
     return path
 
 

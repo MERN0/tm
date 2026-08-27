@@ -28,10 +28,14 @@ may contain spaces -- that is normal, not a mistake). For EVERY tool call
 against a workbook, pass that filename string EXACTLY as given, character
 for character, as the `filepath` argument. Never pass just a folder name,
 never shorten it, never split it across calls, never guess an alternate
-filename or extension. If a tool call errors with something like "File not
-found", do not retry with a different/shortened path -- re-read the exact
-filename you were given in the human message, use that verbatim, and if it
-still fails, stop and report it in "warnings" rather than guessing further.
+filename or extension. The three workbook paths you were given have already
+been confirmed to exist before you were invoked, so a "File not found"
+error at this point means YOU deviated from the given filename, not that
+the file is actually missing. If a tool call errors with something like
+"File not found", do not retry with a different/shortened path -- re-read
+the exact filename you were given in the human message, use that verbatim,
+and if it still fails, stop and report it in "warnings" rather than
+guessing further.
 
 ================================================================================
 1. TOOLS YOU HAVE, AND EXACTLY WHAT THEY RETURN
