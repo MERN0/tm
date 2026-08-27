@@ -1,15 +1,16 @@
 """Assembles the LangGraph pipeline.
 
-Currently a single deterministic node (data extraction). Future nodes (e.g.
-LLM-driven test case generation using system/human prompts) can be appended
-here without restructuring this module.
+Currently a single node: an LLM agent (bound to the Excel MCP server's
+tools) that performs the Node 1 data extraction. Future nodes (e.g. LLM-
+driven test case generation using system/human prompts) can be appended here
+without restructuring this module.
 """
 
 from __future__ import annotations
 
 from langgraph.graph import END, StateGraph
 
-from src.graph.nodes.data_extraction import extract_data
+from src.graph.nodes.extraction_agent import extract_data
 from src.graph.state import GraphState
 
 

@@ -5,6 +5,11 @@ workbooks -- they're hand-built approximations reconstructed from photos of a
 filtered example, used to validate the extraction logic end-to-end until real
 files are available.
 
+The "valid for this feature" marker cells use U+3007 (IDEOGRAPHIC NUMBER
+ZERO, "〇") -- confirmed by the user to be what the real workbooks use --
+which is visually similar to but a distinct character from the Latin letter
+"O". Invalid cells use the plain letter "x".
+
 Run directly to (re)write the fixture files:
     python tests/fixtures/build_fixtures.py
 """
@@ -156,7 +161,7 @@ def build_system_requirements() -> Path:
                 "Command motor speed [rpm]",
                 "x",
                 "x",
-                "O",
+                "〇",
                 "x",
             ],
             [
@@ -168,7 +173,7 @@ def build_system_requirements() -> Path:
                 "ComData_FunctionFlg4",
                 "x",
                 "x",
-                "O",
+                "〇",
                 "x",
             ],
             [
@@ -179,7 +184,7 @@ def build_system_requirements() -> Path:
                 "Main_TxS_0x2020_0x01",
                 "ComData_PwrCtrlMode",
                 "x",
-                "O",
+                "〇",
                 "x",
                 "x",
             ],
@@ -214,7 +219,7 @@ def build_system_requirements() -> Path:
                 300,
                 "x",
                 "x",
-                "O",
+                "〇",
                 "x",
             ],
             [
@@ -226,7 +231,7 @@ def build_system_requirements() -> Path:
                 5,
                 5,
                 "x",
-                "O",
+                "〇",
                 "x",
                 "x",
             ],
@@ -239,11 +244,11 @@ def build_system_requirements() -> Path:
         "Master Input Output Signals",
         io_headers,
         [
-            ["TMHC_SYSRS_IO0005", "Accelerator_Sensor", "Sensor", "x", "x", "O", "x"],
-            ["TMHC_SYSRS_IO0009", "Tire_Angle_Sensor", "Sensor", "x", "x", "O", "x"],
-            ["TMHC_SYSRS_IO0012", "Power_Select", "CAN", "x", "x", "O", "x"],
-            ["TMHC_SYSRS_IO0043", "Slope_Sensor", "Sensor", "x", "x", "O", "x"],
-            ["TMHC_SYSRS_IO0002", "Low_Speed_Switch", "Sensor", "x", "O", "x", "x"],
+            ["TMHC_SYSRS_IO0005", "Accelerator_Sensor", "Sensor", "x", "x", "〇", "x"],
+            ["TMHC_SYSRS_IO0009", "Tire_Angle_Sensor", "Sensor", "x", "x", "〇", "x"],
+            ["TMHC_SYSRS_IO0012", "Power_Select", "CAN", "x", "x", "〇", "x"],
+            ["TMHC_SYSRS_IO0043", "Slope_Sensor", "Sensor", "x", "x", "〇", "x"],
+            ["TMHC_SYSRS_IO0002", "Low_Speed_Switch", "Sensor", "x", "〇", "x", "x"],
         ],
     )
 
