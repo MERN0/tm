@@ -63,6 +63,25 @@ async def _run(args: argparse.Namespace) -> dict:
     return await compiled_graph.ainvoke(initial_state)
 
 
+def write_output(extracted: dict, output_dir: str | Path, feature_id: str) -> Path:
+    """Write the extracted JSON to <output_dir>/<feature_id>_extracted.json.
+
+    Explicitly writes UTF-8 with real (non-escaped) non-ASCII characters --
+    sheet data can contain characters like U+3007 ("〇"), and on Windows
+    Path.write_text() without an explicit encoding falls back to the OS
+    locale encoding (commonly cp1252), which would raise UnicodeEncodeError
+    on that content rather than reliably writing it.
+    """
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / f"{feature_id}_extracted.json"
+    output_path.write_text(
+        json.dumps(extracted, indent=2, ensure_ascii=False, default=str),
+        encoding="utf-8",
+    )
+    return output_path
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     if args.model:
@@ -70,12 +89,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.mcp_url:
         os.environ["EXCEL_MCP_URL"] = args.mcp_url
 
-    result = asyncio.run(_run(args))
+    # Fail fast on a bad --output path before spending an expensive agent run.
+    Path(args.output).mkdir(parents=True, exist_ok=True)
 
-    output_dir = Path(args.output)
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / f"{args.feature}_extracted.json"
-    output_path.write_text(json.dumps(result["extracted"], indent=2, default=str))
+    result = asyncio.run(_run(args))
+    output_path = write_output(result["extracted"], args.output, args.feature)
 
     print(f"Wrote {output_path}")
     for warning in result.get("warnings", []):
