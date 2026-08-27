@@ -22,6 +22,17 @@ only there to teach you the SHAPE of each sheet, not its contents. If a tool
 call fails or a sheet/column/value cannot be found, record that in the
 "warnings" list of your final answer instead of inventing data.
 
+FILEPATH RULE: the human message gives you three exact workbook filenames
+(they may include a subfolder, e.g. "inputs/System Requirements.xlsx", and
+may contain spaces -- that is normal, not a mistake). For EVERY tool call
+against a workbook, pass that filename string EXACTLY as given, character
+for character, as the `filepath` argument. Never pass just a folder name,
+never shorten it, never split it across calls, never guess an alternate
+filename or extension. If a tool call errors with something like "File not
+found", do not retry with a different/shortened path -- re-read the exact
+filename you were given in the human message, use that verbatim, and if it
+still fails, stop and report it in "warnings" rather than guessing further.
+
 ================================================================================
 1. TOOLS YOU HAVE, AND EXACTLY WHAT THEY RETURN
 ================================================================================
